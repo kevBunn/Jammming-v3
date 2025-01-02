@@ -1,5 +1,9 @@
 let accessToken;
-const clientID = "60c4396a520344968762b8603f857a59";
+
+//add spotify client ID here from https://developer.spotify.com/dashboard
+//first you will need to create an app using the above link and add http://localhost:3000/ as the redirect URI's
+const clientID = "";
+
 const redirectURL = "http://localhost:3000/"
 
 const Spotify = {
@@ -49,6 +53,33 @@ const Spotify = {
 				album: t.album.name,
 				uri: t.uri,
 			}));
+		});
+	},
+
+	savePlaylist(name, trackUris) {
+		if (!name || !trackUris) return;
+		const aToken = Spotify.getAccessToken();
+		const header = { Authorization: `Bearer ${aToken}` };
+		let userId;
+		return fetch(`https://api.spotify.com/v1/me`, {headers: header})
+		.then(response => response.json())
+		.then((jsonResponse) => {
+			userId = jsonResponse.id;
+			let playlistId;
+			return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+				headers: header,
+				method: "post",
+				body: JSON.stringify({name: name}),
+			})
+			.then((response) => response.json())
+			.then((jsonResponse) => {
+				playlistId = jsonResponse.id;
+				return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+					headers: header,
+					method: "post",
+					body: JSON.stringify({uris: trackUris}),
+				})
+			});
 		});
 	}
 };
