@@ -10,7 +10,13 @@ function Tracklist (props) {
 			<li>Track 2</li>
 			<li>Track 3</li>*/}
 			{props.userSearchResults.map((track) => (
-				<Track track={track} key={track.id} />
+				<Track
+					track={track}
+					key={track.id}
+					isRemoval={props.isRemoval} 
+					onAdd={props.onAdd}
+					onRemove={props.onRemove}
+				/>
 			))}
 		</div>
 	);
