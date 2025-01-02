@@ -3,7 +3,8 @@ import styles from './App.module.css'
 import SearchBar from "../SearchBar/SearchBar";
 import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
-import Tracklist from "../Tracklist/Tracklist";
+//import Tracklist from "../Tracklist/Tracklist";
+import { Spotify } from "../../util/Spotify/Spotify";
 
 function App() {
   const [searchResults, setSearchResults] = useState([
@@ -57,6 +58,15 @@ function App() {
     setPlaylistName(name);
   }
 
+  function savePlaylist () {
+    const trackURIs = playlistTracks.map((t) => t.uri);
+  }
+
+  function search(term) {
+    Spotify.search(term).then((result) => setSearchResults(result));
+    console.log(term);
+  }
+
   return (
     <div>
       <h1>
@@ -64,7 +74,7 @@ function App() {
       </h1>
       <div className={styles.App}>
         {/* <!-- Add a SearchBar component --> */}
-        <SearchBar />
+        <SearchBar onSearch={search}/>
         
         <div className={styles.AppPlaylist}>
           {/* <!-- Add a SearchResults component --> */}
@@ -76,6 +86,7 @@ function App() {
             playlistTracks={playlistTracks}
             onRemove={removeTrack}
             onNameChange={updatePlaylistName}
+            onSave={savePlaylist}
           />
         </div>
       </div>
